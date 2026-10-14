@@ -28,17 +28,9 @@ function saveApplication() {
 
   error.value = ''
 
-  if (
-    !form.company ||
-    !form.position ||
-    !form.location ||
-    !form.jobType ||
-    !form.dateApplied ||
-    !form.status
-  ) {
-    error.value =
-      'Please complete all required fields.'
-    return
+  if (form.status === 'Interview' && !form.interviewDate) {
+  error.value = 'Please enter the interview date.'
+  return
   }
 
   const applications = JSON.parse(
@@ -154,7 +146,10 @@ function saveApplication() {
           </select>
         </div>
 
-        <div class="interview-form-section">
+        <div
+          v-if="form.status === 'Interview'"
+          class="interview-form-section"
+        >
           <div class="interview-form-heading">
             <span>🎯</span>
             <div>
@@ -165,7 +160,11 @@ function saveApplication() {
 
           <div class="form-group">
             <label>Interview Date</label>
-            <input v-model="form.interviewDate" type="date">
+            <input
+              v-model="form.interviewDate"
+              type="date"
+              :required="form.status === 'Interview'"
+            >
           </div>
 
           <div class="form-group">

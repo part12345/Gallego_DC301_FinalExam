@@ -1,5 +1,31 @@
+
 <script setup>
-import { computed } from 'vue'
+import { computed, ref, onMounted } from 'vue'
+
+const isDarkMode = ref(
+  localStorage.getItem('jobtrack_dark') === 'true'
+)
+
+function toggleDarkMode() {
+  isDarkMode.value = !isDarkMode.value
+
+  localStorage.setItem(
+    'jobtrack_dark',
+    String(isDarkMode.value)
+  )
+
+  document.body.classList.toggle(
+    'dark-mode',
+    isDarkMode.value
+  )
+}
+
+onMounted(() => {
+  document.body.classList.toggle(
+    'dark-mode',
+    isDarkMode.value
+  )
+})
 
 const user = computed(() => {
   return JSON.parse(
@@ -55,6 +81,7 @@ function percent(value) {
 }
 </script>
 
+
 <template>
   <div>
 
@@ -74,12 +101,25 @@ function percent(value) {
           </span>
         </div>
 
-        <RouterLink
-          to="/profile"
-          class="profile-avatar"
-        >
-          {{ (user.name || 'U').charAt(0).toUpperCase() }}
-        </RouterLink>
+        
+  <div class="header-actions">
+    <button
+    type="button"
+    class="theme-toggle"
+    @click="toggleDarkMode"
+    :aria-label="isDarkMode ? 'Switch to light mode' : 'Switch to dark mode'"
+  >
+    <span>{{ isDarkMode ? '☀️' : '🌙' }}</span>
+  </button>
+
+  <RouterLink
+    to="/profile"
+    class="profile-avatar"
+  >
+    {{ (user.name || 'U').charAt(0).toUpperCase() }}
+  </RouterLink>
+  </div>
+
 
       </div>
 
@@ -113,35 +153,35 @@ function percent(value) {
 
         <div class="stat-grid">
 
-        <div class="stat-card blue">
+        <RouterLink to="/applications" class="stat-card blue overview-stat-link" aria-label="View all applications">
           <span class="stat-icon">▣</span>
           <strong>{{ total }}</strong>
           <small>Total Applications</small>
-        </div>
+        </RouterLink>
 
-        <div class="stat-card yellow">
+        <RouterLink to="/applications" class="stat-card yellow overview-stat-link" aria-label="View applications in review">
           <span class="stat-icon">!</span>
           <strong>{{ inReview }}</strong>
           <small>In Review</small>
-        </div>
+        </RouterLink>
 
-        <div class="stat-card purple">
+        <RouterLink to="/applications" class="stat-card purple overview-stat-link" aria-label="View interview applications">
           <span class="stat-icon">●</span>
           <strong>{{ interviews }}</strong>
           <small>Interviews</small>
-        </div>
+        </RouterLink>
 
-        <div class="stat-card green">
+        <RouterLink to="/applications" class="stat-card green overview-stat-link" aria-label="View offers">
           <span class="stat-icon">✓</span>
           <strong>{{ offers }}</strong>
           <small>Offers</small>
-        </div>
+        </RouterLink>
 
-        <div class="stat-card red">
+        <RouterLink to="/applications" class="stat-card red overview-stat-link" aria-label="View rejected applications">
           <span class="stat-icon">×</span>
           <strong>{{ rejected }}</strong>
           <small>Rejected</small>
-        </div>
+        </RouterLink>
         </div>
       </section>
 
